@@ -1,7 +1,7 @@
 package com.ba.jwt.controller;
 
 import com.ba.jwt.auth.TokenManager;
-import com.ba.jwt.dto.LoginRequest;
+import com.ba.jwt.dto.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,11 +21,11 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<String> login(@RequestBody Users user){
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword()));
-            return ResponseEntity.ok(tokenManager.generateToken(loginRequest.getUsername()));
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+            return ResponseEntity.ok(tokenManager.generateToken(user.getUsername()));
         }catch (Exception e){
             throw e;
         }

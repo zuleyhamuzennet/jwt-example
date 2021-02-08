@@ -1,5 +1,7 @@
 package com.ba.jwt.auth;
 
+import com.ba.jwt.dto.Users;
+import com.ba.jwt.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,9 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 @Service
 public class UserDetailService implements UserDetailsService {
 
@@ -19,17 +20,16 @@ public class UserDetailService implements UserDetailsService {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private UserRepository userRepository;
 
-    @PostConstruct
-    public void init(){
-        users.put("admin",bCryptPasswordEncoder.encode("123"));
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if(users.containsKey(username)){
-            return new User(username,users.get(username),new ArrayList<>());
+        Users users=userRepository.findByUsername(username);
+        if(users== null){
+            throw new UsernameNotFoundException(username);
         }
-        throw new UsernameNotFoundException(username);
+        return new User(users.getUsername(), bCryptPasswordEncoder.encode(users.getPassword()), Collections.emptyList());
     }
 }

@@ -17,9 +17,9 @@ public class TokenManager {
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuer("www.deneme.com")  // kim bunu imzaladı
-                .setIssuedAt(new Date(System.currentTimeMillis()))  // hangi tarihte oluşturuldu
-                .setExpiration(new Date(System.currentTimeMillis()+validity))   //ne zamana kadar geçerli
+                .setIssuer("www.deneme.com")
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+validity))
                 .signWith(key)
                 .compact();
     }
